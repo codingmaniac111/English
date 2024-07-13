@@ -51,16 +51,22 @@
             white-space: pre-wrap;
         }
         .search-result {
-            display: flex;
-            align-items: flex-start;
-            gap: 20px;
-        }
-        .search-result img {
-            max-width: 100px;
-            max-height: 100px;
-            border-radius: 4px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    gap: 20px;
+}
+
+.search-result img {
+    width: 200px; 
+    height: 150px; 
+    border-radius: 2ch;
+    max-width: 100%;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+}
+
         .search-result div {
             background-color: #fff;
             padding: 15px;
@@ -92,6 +98,17 @@
         const searchInput = document.getElementById('searchInput');
         const resultDiv = document.getElementById('result');
 
+        function openInPopup(url) {
+    const width = 800;  
+    const height = 600;
+    const left = (window.innerWidth - width) / 2;
+    const top = (window.innerHeight - height) / 2;
+    const options = `width=${width},height=${height},top=${top},left=${left},toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes`;
+
+    window.open(url, 'Search Result', options);
+}
+
+
         function performSearch(query) {
             if (query !== '') {
                 const searchUrl = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${apiKey}&cx=${cx}`;
@@ -118,16 +135,17 @@
                             }
 
                             resultDiv.innerHTML = `
-                                <h3>Search Result:</h3>
-                                <div class="search-result">
-                                    <img src="${imageUrl}" alt="Result Image">
-                                    <div>
-                                        <h4><a href="${link}" target="_blank">${title}</a></h4>
-                                        <p class="snippet">${htmlSnippet}</p>
-                                        <p>URL: <a href="${link}" target="_blank">${formattedUrl}</a></p>
-                                    </div>
-                                </div>
-                            `;
+    <div class="search-result">
+        <div>
+            <h3>Search Result:</h3>
+            <h4><a href="${link}" target="_blank">${title}</a></h4>
+            <p class="snippet">${htmlSnippet}</p>
+            <p>URL: <a href="javascript:void(0);" onclick="openInPopup('${link}')">${formattedUrl}</a></p>
+        </div>
+        <img src="${imageUrl}" alt="Result Image">
+    </div>
+`;
+
                         } else {
                             resultDiv.innerHTML = '<p>No results found.</p>';
                         }
